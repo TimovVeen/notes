@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  scan_changes:
+    runs-on: ubuntu-latest
+    outputs:
+      norg: ${{ steps.filter.outputs.norg }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            norg:
+              - '**/*.norg'
+
+  docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs:
+      - scan_changes
+    if: ${{ needs.scan_changes.outputs.norg == 'true' }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Clone norg-pandoc repository
+        run: |
+          git clone https://github.com/boltlessengineer/norg-pandoc.git
+      - name: Convert .norg files to markdown
+        run: |
+          for file in $(git diff --name-only --diff-filter=AMR HEAD^ HEAD | grep '.norg$'); do
+            pandoc "$file" --from=norg-pandoc/init.lua --to=gfm -o "${file%.norg}.md"
+          done
+      - name: Push changes to wiki
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git clone https://github.com/${{ github.repository }}.wiki.git wiki
+          cp *.md wiki/
+          cd wiki
+          git add .
+          git commit -m "Update wiki"
+          git push
