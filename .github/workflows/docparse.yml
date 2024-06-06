@@ -32,7 +32,7 @@ jobs:
           git clone https://github.com/boltlessengineer/norg-pandoc.git
       - name: Convert .norg files to markdown
         run: |
-          for file in $(git diff --name-only --diff-filter=AMR HEAD^ HEAD | grep '.norg$'); do
+          for file in *.norg; do
             pandoc "$file" --from=norg-pandoc/init.lua --to=gfm -o "${file%.norg}.md"
           done
       - name: Push changes to wiki
