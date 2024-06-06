@@ -31,17 +31,28 @@ jobs:
         run: |
           git clone https://github.com/boltlessengineer/norg-pandoc.git
       - name: Convert .norg files to markdown
-        run: |
-          for file in *.norg; do
-            pandoc "$file" --from=norg-pandoc/init.lua --to=gfm -o "${file%.norg}.md"
-          done
-      - name: Push changes to wiki
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git clone https://github.com/${{ github.repository }}.wiki.git wiki
-          cp *.md wiki/
-          cd wiki
-          git add .
-          git commit -m "Update wiki"
-          git push
+        uses: docker://pandoc/core:3
+        with:
+          args: >-
+            --from=norg-pandoc/init.lua
+            --to=gfm
+            --output=output/
+            ${{ steps.files_list.outputs.norg }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: output
+          path: output
+      #   run: |
+      #     for file in *.norg; do
+      #       pandoc "$file" --from=norg-pandoc/init.lua --to=gfm -o "${file%.norg}.md"
+      #     done
+      # - name: Push changes to wiki
+      #   run: |
+      #     git config --global user.name "github-actions[bot]"
+      #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      #     git clone https://github.com/${{ github.repository }}.wiki.git wiki
+      #     cp *.md wiki/
+      #     cd wiki
+      #     git add .
+      #     git commit -m "Update wiki"
+      #     git push
