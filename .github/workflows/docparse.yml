@@ -34,10 +34,11 @@ jobs:
         uses: docker://pandoc/core:3
         with:
           args: >-
+            index.norg
             --from=norg-pandoc/init.lua
             --to=gfm
-            --output=output/
-            ${{ steps.files_list.outputs.norg }}
+            --output=output/index.md
+            # ${{ steps.files_list.outputs.norg }}
       - uses: actions/upload-artifact@v3
         with:
           name: output
