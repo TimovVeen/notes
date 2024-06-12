@@ -5,26 +5,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  scan_changes:
-    runs-on: ubuntu-latest
-    outputs:
-      norg: ${{ steps.filter.outputs.norg }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          filters: |
-            norg:
-              - '**/*.norg'
+  # scan_changes:
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     norg: ${{ steps.filter.outputs.norg }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: dorny/paths-filter@v2
+  #       id: filter
+  #       with:
+  #         filters: |
+  #           norg:
+  #             - '**/*.norg'
 
   docs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    needs:
-      - scan_changes
-    if: ${{ needs.scan_changes.outputs.norg == 'true' }}
+    # needs:
+    #   - scan_changes
+    # if: ${{ needs.scan_changes.outputs.norg == 'true' }}
     steps:
       - uses: actions/checkout@v3
       - name: Clone norg-pandoc repository
@@ -34,10 +34,11 @@ jobs:
         uses: docker://pandoc/core:latest
         with:
           args: >-
-            index.norg
-            --from=norg-pandoc/init.lua
-            --to=gfm
-            --output=output/index.md
+            -v
+            # index.norg
+            # --from=norg-pandoc/init.lua
+            # --to=gfm
+            # --output=output/index.md
             # ${{ steps.files_list.outputs.norg }}
       - uses: actions/upload-artifact@v3
         with:
