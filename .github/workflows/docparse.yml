@@ -5,19 +5,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup ‘lua’
-        uses: leafo/gh-actions-lua@v9
-        with:
-          luaVersion: 5.4
-      - name: Setup ‘luarocks’
-        uses: leafo/gh-actions-luarocks@v4
-      - name: Setup dependencies
-        run: |
-          luarocks install lpeg
   scan_changes:
     runs-on: ubuntu-latest
     outputs:
@@ -37,15 +24,14 @@ jobs:
       contents: write
     needs:
       - scan_changes
-      - setup
     if: ${{ needs.scan_changes.outputs.norg == 'true' }}
     steps:
       - uses: actions/checkout@v3
       - name: Clone norg-pandoc repository
         run: |
-          git clone https://github.com/boltlessengineer/norg-pandoc.git
+          git clone https://github.com/boltlessengineer/norg-pandoc.git .
       - name: Convert .norg files to markdown
-        uses: docker://pandoc/extra:3
+        uses: docker://pandoc/core:3
         with:
           args: >-
             index.norg
