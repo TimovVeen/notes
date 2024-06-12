@@ -30,11 +30,8 @@ jobs:
       - name: Clone norg-pandoc repository
         run: |
           git clone https://github.com/boltlessengineer/norg-pandoc.git
-      - name: Path fix
-        run: |
-          echo "LUA_PATH=$(pwd)/norg-pandoc/?.lua;;" >> $GITHUB_ENV
       - name: Convert .norg files to markdown
-        uses: docker://pandoc/core:3
+        uses: docker://pandoc/core:latest
         with:
           args: >-
             index.norg
