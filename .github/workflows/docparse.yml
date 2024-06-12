@@ -27,11 +27,10 @@ jobs:
     # if: ${{ needs.scan_changes.outputs.norg == 'true' }}
     steps:
       - uses: actions/checkout@v3
-      - name: Clone norg-pandoc repository
-        run: |
-          git clone https://github.com/boltlessengineer/norg-pandoc.git
+      - name: Create output folder
+        run: mkdir output
       - name: Convert .norg files to markdown
-        uses: docker://pandoc/core:latest
+        uses: docker://pandoc/core:3
         with:
           args: >-
             index.norg
