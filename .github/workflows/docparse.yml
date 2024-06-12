@@ -45,7 +45,7 @@ jobs:
         run: |
           git clone https://github.com/boltlessengineer/norg-pandoc.git
       - name: Convert .norg files to markdown
-        uses: docker://pandoc/core:3
+        uses: docker://pandoc/extra:3
         with:
           args: >-
             index.norg
