@@ -47,7 +47,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git clone https://github.com/${{ github.repository }}.wiki.git wiki
-          cp index.md wiki/
+          cp output/index.md wiki/
           cd wiki
           git add .
           git commit -m "Update wiki"
