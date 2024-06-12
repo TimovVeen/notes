@@ -42,11 +42,13 @@ jobs:
         with:
           name: output
           path: output
+      - name: Checkout wiki
+        uses: actions/checkout@v3
+        with:
+          repository: ${{github.repository}}.wiki
+          path: wiki
       - name: Push changes to wiki
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git clone https://github.com/${{ github.repository }}.wiki.git wiki
           cp output/index.md wiki/
           cd wiki
           git add .
