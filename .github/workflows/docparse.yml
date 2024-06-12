@@ -34,7 +34,7 @@ jobs:
         with:
           args: >-
             index.norg
-            --from=norg-pandoc/init.lua
+            --from=init.lua
             --to=gfm
             --output=output/index.md
             ${{ steps.files_list.outputs.norg }}
